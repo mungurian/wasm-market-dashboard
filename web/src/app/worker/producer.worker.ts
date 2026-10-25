@@ -1,18 +1,42 @@
 /// <reference lib="webworker" />
 
-/**
- * Proof-of-concept worker for milestone 2: load the Wasm module inside a
- * real Web Worker and run one generator call, to prove the build/bundle
- * pipeline (esbuild worker bundling + wasm-bindgen web target) works
- * end-to-end before the real ProducerEngine is built on top of it.
- */
 import init, { Generator } from '../../wasm-pkg/wasm_producer.js';
+import type { UiToWorkerMessage, WorkerToUiMessage } from '../core/protocol';
+import { ProducerEngine, RealTimeScheduler, type GeneratorLike } from './producer-engine';
 
-async function main() {
-  await init();
-  const generator = new Generator(42n, 3);
-  const batch = generator.generate(5);
-  postMessage({ type: 'poc-result', batch: Array.from(batch) });
+function post(message: WorkerToUiMessage): void {
+  postMessage(message);
 }
 
-main().catch((err) => postMessage({ type: 'poc-error', message: String(err) }));
+async function main(): Promise<void> {
+  try {
+    await init();
+  } catch (err) {
+    post({ type: 'error', message: `Wasm init failed: ${String(err)}` });
+    return;
+  }
+
+  const generatorFactory = (seed: number, instrumentCount: number): GeneratorLike =>
+    new Generator(BigInt(seed), instrumentCount);
+
+  const engine = new ProducerEngine(generatorFactory, new RealTimeScheduler(), post);
+
+  onmessage = (event: MessageEvent<UiToWorkerMessage>) => {
+    const message = event.data;
+    switch (message.type) {
+      case 'start':
+        engine.start(message.runId, message.settings);
+        break;
+      case 'pause':
+        engine.pause(message.runId);
+        break;
+      case 'resume':
+        engine.resume(message.runId);
+        break;
+    }
+  };
+
+  post({ type: 'ready' });
+}
+
+main();
