@@ -1,10 +1,24 @@
-<section class="status-line">
-  <span>status: <strong>{{ store.status() }}</strong></span>
-  <span>run id: {{ store.runId() }}</span>
-  <span>total updates: {{ store.totalUpdates() }}</span>
-  <span>nominal rate: {{ nominalRatePerSecond() }} updates/s</span>
+<section class="card toolbar">
+  <div class="stat">
+    <span class="stat-label">Status</span>
+    <span class="status-badge" [class]="statusBadgeClass()">{{ store.status() }}</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Run ID</span>
+    <span class="stat-value">{{ store.runId() }}</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Total updates</span>
+    <span class="stat-value">{{ store.totalUpdates() }}</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Nominal rate</span>
+    <span class="stat-value">{{ nominalRatePerSecond() }}/s</span>
+  </div>
+
   <button
     type="button"
+    class="btn btn-primary toolbar-action"
     (click)="togglePause()"
     [disabled]="store.status() === 'initializing' || store.status() === 'error'"
   >
@@ -13,30 +27,32 @@
 </section>
 
 @if (store.status() === 'error') {
-  <p class="error" role="alert">{{ store.error() }}</p>
+  <p class="error-banner" role="alert">{{ store.error() }}</p>
 }
 
-<table>
-  <thead>
-    <tr>
-      <th>Symbol</th>
-      <th>Last</th>
-      <th>Spread</th>
-      <th>Volume</th>
-      <th>VWAP</th>
-      <th>Imbalance</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (row of store.rows(); track row.symbol) {
+<div class="card table-card">
+  <table class="data-table">
+    <thead>
       <tr>
-        <td>{{ row.symbol }}</td>
-        <td>{{ formatCents(row.lastPriceCents) }}</td>
-        <td>{{ formatCents(row.spreadCents) }}</td>
-        <td>{{ row.volume }}</td>
-        <td>{{ formatCents(row.vwapCents) }}</td>
-        <td>{{ formatImbalance(row.imbalance) }}</td>
+        <th>Symbol</th>
+        <th>Last</th>
+        <th>Spread</th>
+        <th>Volume</th>
+        <th>VWAP</th>
+        <th>Imbalance</th>
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      @for (row of store.rows(); track row.symbol) {
+        <tr>
+          <td>{{ row.symbol }}</td>
+          <td>{{ formatCents(row.lastPriceCents) }}</td>
+          <td>{{ formatCents(row.spreadCents) }}</td>
+          <td>{{ row.volume }}</td>
+          <td>{{ formatCents(row.vwapCents) }}</td>
+          <td [class]="imbalanceClass(row.imbalance)">{{ formatImbalance(row.imbalance) }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,20 +1,44 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+
 nav {
   display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  border-bottom: 1px solid #ddd;
+  gap: 0.25rem;
 }
 
 nav a {
   text-decoration: none;
-  color: #333;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+}
+
+nav a:hover {
+  color: var(--text-primary);
+  background: var(--accent-wash);
 }
 
 nav a.active {
-  font-weight: 600;
-  color: #000;
+  color: var(--accent);
+  background: var(--accent-wash);
 }
 
 main {
-  padding: 1rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.5rem;
 }

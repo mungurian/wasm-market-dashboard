@@ -1,1 +1,277 @@
-/* You can add global styles to this file, and also import other style files */
+/* ---------- Design tokens ---------- */
+:root {
+  color-scheme: light;
+
+  --surface-page: #f9f9f7;
+  --surface-card: #fcfcfb;
+  --surface-raised: #ffffff;
+
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+
+  --border: #e1e0d9;
+  --border-strong: #c3c2b7;
+
+  --accent: #2a78d6;
+  --accent-contrast: #ffffff;
+  --accent-wash: #e8f0fb;
+
+  --status-good: #0ca30c;
+  --status-good-wash: #e3f6e3;
+  --status-warning: #d98c00;
+  --status-warning-wash: #fdf1d9;
+  --status-critical: #d03b3b;
+  --status-critical-wash: #fbe6e6;
+  --status-neutral: #898781;
+  --status-neutral-wash: #efeee9;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius: 10px;
+  --shadow-card: 0 1px 2px rgba(11, 11, 11, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --surface-page: #0d0d0d;
+    --surface-card: #1a1a19;
+    --surface-raised: #222221;
+
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+
+    --border: #2c2c2a;
+    --border-strong: #383835;
+
+    --accent: #3987e5;
+    --accent-contrast: #ffffff;
+    --accent-wash: #16263b;
+
+    --status-good: #0ca30c;
+    --status-good-wash: #10280f;
+    --status-warning: #fab219;
+    --status-warning-wash: #2e2410;
+    --status-critical: #e66767;
+    --status-critical-wash: #301616;
+    --status-neutral: #898781;
+    --status-neutral-wash: #232321;
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* ---------- Reset & base ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+/* ---------- UI kit: buttons ---------- */
+.btn {
+  font: inherit;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--text-secondary);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+  border-color: var(--accent);
+}
+
+/* ---------- UI kit: cards ---------- */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem;
+}
+
+/* ---------- UI kit: status badge ---------- */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.status-badge::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-badge--good {
+  color: var(--status-good);
+  background: var(--status-good-wash);
+}
+
+.status-badge--warning {
+  color: var(--status-warning);
+  background: var(--status-warning-wash);
+}
+
+.status-badge--critical {
+  color: var(--status-critical);
+  background: var(--status-critical-wash);
+}
+
+.status-badge--neutral {
+  color: var(--status-neutral);
+  background: var(--status-neutral-wash);
+}
+
+/* ---------- UI kit: stat chips ---------- */
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+/* ---------- UI kit: table ---------- */
+.data-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table th {
+  text-align: right;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.data-table td {
+  text-align: right;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+  text-align: left;
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.data-table tbody tr:hover {
+  background: var(--accent-wash);
+}
+
+.data-table .up {
+  color: var(--status-good);
+}
+
+.data-table .down {
+  color: var(--status-critical);
+}
+
+/* ---------- UI kit: forms ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.field input {
+  font: inherit;
+  font-family: var(--font-mono);
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+.field input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.field input.ng-invalid.ng-touched {
+  border-color: var(--status-critical);
+}
+
+.error-text {
+  color: var(--status-critical);
+  font-size: 0.82rem;
+  margin: 0;
+}

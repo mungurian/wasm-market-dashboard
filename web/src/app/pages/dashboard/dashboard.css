@@ -1,29 +1,26 @@
-.status-line {
+.toolbar {
   display: flex;
-  gap: 1.5rem;
   align-items: center;
+  gap: 2rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
 }
 
-.error {
-  color: #b00020;
+.toolbar-action {
+  margin-left: auto;
+}
+
+.error-banner {
+  background: var(--status-critical-wash);
+  color: var(--status-critical);
+  border: 1px solid var(--status-critical);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
   font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-th,
-td {
-  border-bottom: 1px solid #ddd;
-  padding: 0.4rem 0.75rem;
-  text-align: right;
-}
-
-th:first-child,
-td:first-child {
-  text-align: left;
+.table-card {
+  padding: 0;
+  overflow-x: auto;
 }

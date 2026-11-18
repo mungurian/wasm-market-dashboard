@@ -1,9 +1,11 @@
-<form [formGroup]="form" (ngSubmit)="apply()">
+<form class="card settings-form" [formGroup]="form" (ngSubmit)="apply()">
+  <h2>Producer settings</h2>
+
   <div class="field">
     <label for="instrumentCount">Instrument count ({{ instrumentCountRange.min }}–{{ instrumentCountRange.max }})</label>
     <input id="instrumentCount" type="number" formControlName="instrumentCount" />
     @if (form.controls.instrumentCount.touched && form.controls.instrumentCount.invalid) {
-      <p class="error">
+      <p class="error-text">
         @if (form.controls.instrumentCount.errors?.['required']) {
           Instrument count is required.
         } @else if (form.controls.instrumentCount.errors?.['integer']) {
@@ -19,7 +21,7 @@
     <label for="updatesPerBatch">Updates per batch ({{ updatesPerBatchRange.min }}–{{ updatesPerBatchRange.max }})</label>
     <input id="updatesPerBatch" type="number" formControlName="updatesPerBatch" />
     @if (form.controls.updatesPerBatch.touched && form.controls.updatesPerBatch.invalid) {
-      <p class="error">
+      <p class="error-text">
         @if (form.controls.updatesPerBatch.errors?.['required']) {
           Updates per batch is required.
         } @else if (form.controls.updatesPerBatch.errors?.['integer']) {
@@ -35,7 +37,7 @@
     <label for="batchIntervalMs">Batch interval, ms ({{ batchIntervalMsRange.min }}–{{ batchIntervalMsRange.max }})</label>
     <input id="batchIntervalMs" type="number" formControlName="batchIntervalMs" />
     @if (form.controls.batchIntervalMs.touched && form.controls.batchIntervalMs.invalid) {
-      <p class="error">
+      <p class="error-text">
         @if (form.controls.batchIntervalMs.errors?.['required']) {
           Batch interval is required.
         } @else if (form.controls.batchIntervalMs.errors?.['integer']) {
@@ -47,5 +49,5 @@
     }
   </div>
 
-  <button type="submit" [disabled]="form.invalid">Apply</button>
+  <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Apply</button>
 </form>

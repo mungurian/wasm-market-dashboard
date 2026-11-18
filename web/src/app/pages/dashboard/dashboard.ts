@@ -26,6 +26,24 @@ export class Dashboard {
     return `${sign}${value.toFixed(2)}`;
   }
 
+  protected imbalanceClass(value: number | null): string {
+    if (value === null) return '';
+    return value > 0 ? 'up' : value < 0 ? 'down' : '';
+  }
+
+  protected statusBadgeClass(): string {
+    switch (this.store.status()) {
+      case 'running':
+        return 'status-badge--good';
+      case 'paused':
+        return 'status-badge--warning';
+      case 'error':
+        return 'status-badge--critical';
+      default:
+        return 'status-badge--neutral';
+    }
+  }
+
   protected togglePause(): void {
     if (this.store.status() === 'running') {
       this.store.pause();

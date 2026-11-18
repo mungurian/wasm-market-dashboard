@@ -1,7 +1,10 @@
-<nav>
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
-  <a routerLink="/settings" routerLinkActive="active">Settings</a>
-</nav>
+<header class="topbar">
+  <span class="brand">Market Dashboard</span>
+  <nav>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+    <a routerLink="/settings" routerLinkActive="active">Settings</a>
+  </nav>
+</header>
 
 <main>
   <router-outlet />
