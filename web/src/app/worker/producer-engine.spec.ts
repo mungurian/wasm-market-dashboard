@@ -29,6 +29,7 @@ class FakeScheduler implements Scheduler {
 
 class FakeGenerator implements GeneratorLike {
   readonly batchSizes: number[] = [];
+  freed = false;
 
   generate(batchSize: number): Int32Array {
     this.batchSizes.push(batchSize);
@@ -37,6 +38,10 @@ class FakeGenerator implements GeneratorLike {
       rows.push(0, 10_000, 1, 9_990, 10_010, 10, 10);
     }
     return new Int32Array(rows);
+  }
+
+  free(): void {
+    this.freed = true;
   }
 }
 
@@ -124,6 +129,27 @@ describe('ProducerEngine', () => {
 
     scheduler.flush();
     expect(generator.batchSizes).toEqual([SETTINGS.updatesPerBatch]);
+  });
+
+  it('frees the previous generator before creating a new one on start()', () => {
+    const scheduler = new FakeScheduler();
+    const generators: FakeGenerator[] = [];
+    const engine = new ProducerEngine(
+      () => {
+        const generator = new FakeGenerator();
+        generators.push(generator);
+        return generator;
+      },
+      scheduler,
+      () => {},
+    );
+
+    engine.start(1, SETTINGS);
+    expect(generators[0].freed).toBe(false);
+
+    engine.start(2, SETTINGS);
+    expect(generators[0].freed).toBe(true);
+    expect(generators[1].freed).toBe(false);
   });
 
   it('reports an error when generator init fails, without posting running status', () => {

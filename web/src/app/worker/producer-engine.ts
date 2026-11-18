@@ -4,6 +4,8 @@ import type { ProducerSettings, ProducerStatus, WorkerToUiMessage } from '../cor
 /** Minimal surface of the wasm `Generator` the engine depends on. */
 export interface GeneratorLike {
   generate(batchSize: number): Int32Array;
+  /** Releases the underlying wasm memory. Optional so fakes in tests don't need it. */
+  free?(): void;
 }
 
 export type GeneratorFactory = (seed: number, instrumentCount: number) => GeneratorLike;
@@ -50,6 +52,8 @@ export class ProducerEngine {
 
   start(runId: number, settings: ProducerSettings): void {
     this.cancelTimer();
+    this.generator?.free?.();
+    this.generator = null;
     this.runId = runId;
     this.settings = settings;
     this.acc = createAccumulators(settings.instrumentCount);

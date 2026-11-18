@@ -12,7 +12,7 @@ export class Dashboard {
 
   protected readonly nominalRatePerSecond = computed(() => {
     const { updatesPerBatch, batchIntervalMs } = this.store.settings();
-    return (updatesPerBatch * 1000) / batchIntervalMs;
+    return Math.round(((updatesPerBatch * 1000) / batchIntervalMs) * 10) / 10;
   });
 
   protected formatCents(cents: number | null): string {
