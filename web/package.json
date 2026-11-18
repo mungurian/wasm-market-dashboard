@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "build:wasm": "wasm-pack build ../wasm-producer --target web --out-dir src/wasm-pkg --out-name wasm_producer",
+    "build:wasm": "wasm-pack build ../wasm-producer --target web --out-dir ../web/src/wasm-pkg --out-name wasm_producer",
     "prestart": "npm run build:wasm",
     "start": "ng serve",
     "prebuild": "npm run build:wasm",
