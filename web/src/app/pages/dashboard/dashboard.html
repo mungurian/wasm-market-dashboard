@@ -1,7 +1,7 @@
 <section class="card toolbar">
   <div class="stat">
     <span class="stat-label">Status</span>
-    <span class="status-badge" [class]="statusBadgeClass()">{{ store.status() }}</span>
+    <span class="status-badge" [class]="store.status() | statusBadgeClass">{{ store.status() }}</span>
   </div>
   <div class="stat">
     <span class="stat-label">Run ID</span>
@@ -46,11 +46,11 @@
       @for (row of store.rows(); track row.symbol) {
         <tr>
           <td>{{ row.symbol }}</td>
-          <td>{{ formatCents(row.lastPriceCents) }}</td>
-          <td>{{ formatCents(row.spreadCents) }}</td>
+          <td>{{ row.lastPriceCents | centsCurrency }}</td>
+          <td>{{ row.spreadCents | centsCurrency }}</td>
           <td>{{ row.volume }}</td>
-          <td>{{ formatCents(row.vwapCents) }}</td>
-          <td [class]="imbalanceClass(row.imbalance)">{{ formatImbalance(row.imbalance) }}</td>
+          <td>{{ row.vwapCents | centsCurrency }}</td>
+          <td [class]="row.imbalance | imbalanceClass">{{ row.imbalance | imbalance }}</td>
         </tr>
       }
     </tbody>
