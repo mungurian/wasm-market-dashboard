@@ -51,10 +51,7 @@ export class ProducerStore {
     const workerFactory = inject(WORKER_FACTORY);
     this.worker = workerFactory();
     this.worker.onmessage = (event) => this.handleMessage(event.data);
-    this.worker.onerror = (event) => {
-      this.status.set('error');
-      this.error.set(event.message || 'Worker error');
-    };
+    this.worker.onerror = (event) => this.setError(event.message || 'Worker error');
 
     inject(DestroyRef).onDestroy(() => this.worker.terminate());
   }
@@ -94,9 +91,13 @@ export class ProducerStore {
         break;
       case 'error':
         if (message.runId !== undefined && message.runId !== this.runId()) return;
-        this.status.set('error');
-        this.error.set(message.message);
+        this.setError(message.message);
         break;
     }
+  }
+
+  private setError(message: string): void {
+    this.status.set('error');
+    this.error.set(message);
   }
 }

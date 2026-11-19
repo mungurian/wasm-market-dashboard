@@ -12,7 +12,10 @@ export const DEFAULT_SETTINGS: ProducerSettings = {
   batchIntervalMs: 500,
 };
 
-export type ProducerStatus = 'running' | 'paused';
+/** The engine's own running/paused state, as reported by the worker. Distinct
+ * from `ProducerUiStatus` (producer-store.ts), which also covers UI-only
+ * states like 'initializing' and 'error' that the engine never knows about. */
+export type WorkerStatus = 'running' | 'paused';
 
 export type UiToWorkerMessage =
   | { type: 'start'; runId: number; settings: ProducerSettings }
@@ -22,5 +25,5 @@ export type UiToWorkerMessage =
 export type WorkerToUiMessage =
   | { type: 'ready' }
   | { type: 'snapshot'; runId: number; rows: SnapshotRow[]; totalUpdates: number }
-  | { type: 'status'; runId: number; status: ProducerStatus }
+  | { type: 'status'; runId: number; status: WorkerStatus }
   | { type: 'error'; runId?: number; message: string };

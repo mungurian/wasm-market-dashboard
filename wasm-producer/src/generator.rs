@@ -4,6 +4,21 @@ use crate::prng::Prng;
 /// `[instrumentIndex, priceCents, tradeQuantity, bidCents, askCents, bidQuantity, askQuantity]`.
 pub const STRIDE: usize = 7;
 
+const INITIAL_PRICE_MIN_CENTS: i64 = 5_000; // $50.00
+const INITIAL_PRICE_MAX_CENTS: i64 = 50_000; // $500.00
+const INITIAL_QTY_MIN: i64 = 100;
+const INITIAL_QTY_MAX: i64 = 1_000;
+
+const MID_STEP_MIN: i64 = -25;
+const MID_STEP_MAX: i64 = 25;
+const SPREAD_MIN_CENTS: i64 = 1;
+const SPREAD_MAX_CENTS: i64 = 15;
+const TRADE_QTY_MIN: i64 = 1;
+const TRADE_QTY_MAX: i64 = 500;
+const QTY_STEP_MIN: i64 = -40;
+const QTY_STEP_MAX: i64 = 40;
+const MIN_BID_CENTS: i64 = 100;
+
 struct InstrumentState {
     mid_cents: i64,
     bid_qty: i64,
@@ -23,10 +38,9 @@ impl GeneratorCore {
         let count = instrument_count.max(1);
         let instruments = (0..count)
             .map(|_| InstrumentState {
-                // Start each instrument at a different plausible price between $50.00 and $500.00.
-                mid_cents: prng.next_range(5_000, 50_000),
-                bid_qty: prng.next_range(100, 1_000),
-                ask_qty: prng.next_range(100, 1_000),
+                mid_cents: prng.next_range(INITIAL_PRICE_MIN_CENTS, INITIAL_PRICE_MAX_CENTS),
+                bid_qty: prng.next_range(INITIAL_QTY_MIN, INITIAL_QTY_MAX),
+                ask_qty: prng.next_range(INITIAL_QTY_MIN, INITIAL_QTY_MAX),
             })
             .collect();
         GeneratorCore { prng, instruments }
@@ -39,17 +53,17 @@ impl GeneratorCore {
 
         for _ in 0..batch_size {
             let idx = self.prng.next_range(0, instrument_count - 1) as usize;
-            let mid_step = self.prng.next_range(-25, 25);
-            let spread_cents = self.prng.next_range(1, 15);
+            let mid_step = self.prng.next_range(MID_STEP_MIN, MID_STEP_MAX);
+            let spread_cents = self.prng.next_range(SPREAD_MIN_CENTS, SPREAD_MAX_CENTS);
             let trade_on_ask = self.prng.next_range(0, 1) == 1;
-            let trade_qty = self.prng.next_range(1, 500);
-            let bid_qty_step = self.prng.next_range(-40, 40);
-            let ask_qty_step = self.prng.next_range(-40, 40);
+            let trade_qty = self.prng.next_range(TRADE_QTY_MIN, TRADE_QTY_MAX);
+            let bid_qty_step = self.prng.next_range(QTY_STEP_MIN, QTY_STEP_MAX);
+            let ask_qty_step = self.prng.next_range(QTY_STEP_MIN, QTY_STEP_MAX);
 
             let inst = &mut self.instruments[idx];
 
             // Random-walk the mid, keeping enough headroom that bid stays >= 1 cent.
-            let min_mid = 100 + spread_cents;
+            let min_mid = MIN_BID_CENTS + spread_cents;
             inst.mid_cents = (inst.mid_cents + mid_step).max(min_mid);
 
             let half_spread = spread_cents / 2;
@@ -137,9 +151,10 @@ mod tests {
             let ask = out[4];
             let mid = (bid + ask) / 2;
             if let Some(prev) = last_mid_for[idx] {
-                // mid_step is bounded to [-25, 25] per hit, spread changes by at most
-                // a few cents either side, so consecutive mids for one instrument
-                // must stay within a small bounded range, not jump arbitrarily.
+                // mid_step is bounded to [MID_STEP_MIN, MID_STEP_MAX] per hit, spread
+                // changes by at most a few cents either side, so consecutive mids for
+                // one instrument must stay within a small bounded range, not jump
+                // arbitrarily.
                 assert!(
                     (mid - prev).abs() <= 50,
                     "mid moved too far for one instrument: {} -> {}",

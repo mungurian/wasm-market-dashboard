@@ -1,17 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { ProducerStore, WORKER_FACTORY, type WorkerLike } from '../../core/producer-store';
-import type { UiToWorkerMessage, WorkerToUiMessage } from '../../core/protocol';
+import { ProducerStore, WORKER_FACTORY } from '../../core/producer-store';
+import { FakeWorker } from '../../testing/fake-worker';
 import { Settings } from './settings';
-
-class FakeWorker implements WorkerLike {
-  readonly posted: UiToWorkerMessage[] = [];
-  onmessage: ((event: MessageEvent<WorkerToUiMessage>) => void) | null = null;
-  onerror: ((event: ErrorEvent) => void) | null = null;
-  postMessage(message: UiToWorkerMessage): void {
-    this.posted.push(message);
-  }
-  terminate(): void {}
-}
 
 describe('Settings', () => {
   let worker: FakeWorker;

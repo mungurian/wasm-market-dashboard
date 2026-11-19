@@ -1,7 +1,14 @@
 /** Flat i32 stride per market update, matching the wasm generator's output. */
 export const UPDATE_STRIDE = 7;
 
-/** Fixed, deterministic list of 50 instrument symbols, mapped by index. */
+/**
+ * Fixed, deterministic list of 50 instrument symbols, mapped by index.
+ * The first 26 are the front 4 letters of the NATO phonetic alphabet
+ * (index 1 overridden to 'BETA' to match the spec's own example). The
+ * remaining 24 are the back 4 letters of those same words, reused to
+ * reach 50 unique codes without inventing more "real-looking" words —
+ * they're not meant to spell anything, just to be stable and unique.
+ */
 export const SYMBOLS: readonly string[] = [
   'ALFA', 'BETA', 'CHAR', 'DELT', 'ECHO', 'FOXT', 'GOLF', 'HOTE', 'INDI', 'JULI',
   'KILO', 'LIMA', 'MIKE', 'NOVE', 'OSCA', 'PAPA', 'QUEB', 'ROME', 'SIER', 'TANG',

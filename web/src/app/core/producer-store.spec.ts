@@ -1,26 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { FakeWorker } from '../testing/fake-worker';
 import type { SnapshotRow } from './metrics';
-import { ProducerStore, WORKER_FACTORY, type WorkerLike } from './producer-store';
-import { DEFAULT_SETTINGS, type ProducerSettings, type UiToWorkerMessage, type WorkerToUiMessage } from './protocol';
-
-class FakeWorker implements WorkerLike {
-  readonly posted: UiToWorkerMessage[] = [];
-  onmessage: ((event: MessageEvent<WorkerToUiMessage>) => void) | null = null;
-  onerror: ((event: ErrorEvent) => void) | null = null;
-  terminated = false;
-
-  postMessage(message: UiToWorkerMessage): void {
-    this.posted.push(message);
-  }
-
-  terminate(): void {
-    this.terminated = true;
-  }
-
-  emit(message: WorkerToUiMessage): void {
-    this.onmessage?.({ data: message } as MessageEvent<WorkerToUiMessage>);
-  }
-}
+import { ProducerStore, WORKER_FACTORY } from './producer-store';
+import { DEFAULT_SETTINGS, type ProducerSettings } from './protocol';
 
 const SETTINGS_A: ProducerSettings = { instrumentCount: 2, updatesPerBatch: 10, batchIntervalMs: 100 };
 const SETTINGS_B: ProducerSettings = { instrumentCount: 3, updatesPerBatch: 20, batchIntervalMs: 200 };

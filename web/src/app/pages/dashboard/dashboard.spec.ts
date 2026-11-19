@@ -1,14 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { WORKER_FACTORY, type WorkerLike } from '../../core/producer-store';
-import type { UiToWorkerMessage, WorkerToUiMessage } from '../../core/protocol';
+import { WORKER_FACTORY } from '../../core/producer-store';
+import { FakeWorker } from '../../testing/fake-worker';
 import { Dashboard } from './dashboard';
-
-class FakeWorker implements WorkerLike {
-  onmessage: ((event: MessageEvent<WorkerToUiMessage>) => void) | null = null;
-  onerror: ((event: ErrorEvent) => void) | null = null;
-  postMessage(_message: UiToWorkerMessage): void {}
-  terminate(): void {}
-}
 
 describe('Dashboard', () => {
   beforeEach(() => {

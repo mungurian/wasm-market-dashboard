@@ -1,5 +1,5 @@
 import { applyBatch, createAccumulators, SYMBOLS, toSnapshotRows, type InstrumentAccumulator } from '../core/metrics';
-import type { ProducerSettings, ProducerStatus, WorkerToUiMessage } from '../core/protocol';
+import type { ProducerSettings, WorkerStatus, WorkerToUiMessage } from '../core/protocol';
 
 /** Minimal surface of the wasm `Generator` the engine depends on. */
 export interface GeneratorLike {
@@ -41,7 +41,7 @@ export class ProducerEngine {
   private settings: ProducerSettings | null = null;
   private runId = 0;
   private totalUpdates = 0;
-  private status: ProducerStatus = 'paused';
+  private status: WorkerStatus = 'paused';
   private timerHandle: number | null = null;
 
   constructor(
